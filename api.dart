@@ -24,12 +24,8 @@ class ApiScreenState extends State<Api> {
 
       final data = jsonDecode(response.body);
       setState(() {
-        for (Map i in data) {
-          _list.add(User.fromJson(i));
-          loading = false;
-
-
-        }
+        _list = (data["data"] ?? List() as List<dynamic>).map((jsonDataObj) => User.fromJson(dataObj)).toList();
+        loading = false;
       });
     }
   }
