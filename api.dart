@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+mport 'dart:async';
 import 'dart:core';
-import 'package:http/http.dart' as http;
+
+import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'dart:async';
+import 'package:http/http.dart' as http;
 
 class Api extends StatefulWidget {
   @override
@@ -10,26 +11,22 @@ class Api extends StatefulWidget {
 }
 
 class ApiScreenState extends State<Api> {
-
   List<User> _list = [];
   List<User> _search = [];
   var loading = false;
+
   Future<Null> fetchData() async {
     setState(() {
       loading = true;
     });
     _list.clear();
-    final response = await http.get("https://cmfiflutterapp.s3-ap-southeast-2.amazonaws.com/latest.json");
+    final response = await http.get(
+        "https://cmfiflutterapp.s3-ap-southeast-2.amazonaws.com/latest.json");
     if (response.statusCode == 200) {
-
-      final data = jsonDecode(response.body);
+      ResponseModel model = responseModelFromJson(response.body);
       setState(() {
-        for (Map i in data) {
-          _list.add(User.fromJson(i));
-          loading = false;
-
-
-        }
+        _list.addAll(model.data);
+        loading = false;
       });
     }
   }
@@ -44,11 +41,10 @@ class ApiScreenState extends State<Api> {
     }
 
     _list.forEach((f) {
-      if (f.Ctry.contains(text) ||
-          f.PeopNameInCountry.toString().contains(text)) _search.add(f);
+      if (f.ctry.contains(text) ||
+          f.peopNameInCountry.toString().contains(text)) _search.add(f);
     });
 
-    setState(() {});
   }
 
   @override
@@ -114,7 +110,7 @@ class ApiScreenState extends State<Api> {
                           CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              b.Ctry,
+                              b.ctry,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18.0),
@@ -122,7 +118,7 @@ class ApiScreenState extends State<Api> {
                             SizedBox(
                               height: 4.0,
                             ),
-                            Text(b.PeopNameInCountry),
+                            Text(b.peopNameInCountry),
                           ],
                         )),
                   );
@@ -148,7 +144,7 @@ class ApiScreenState extends State<Api> {
                           CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              a.Ctry,
+                              a.ctry,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18.0),
@@ -156,7 +152,7 @@ class ApiScreenState extends State<Api> {
                             SizedBox(
                               height: 4.0,
                             ),
-                            Text(a.PeopNameInCountry),
+                            Text(a.peopNameInCountry),
                           ],
                         )),
                   );
@@ -170,19 +166,16 @@ class ApiScreenState extends State<Api> {
   }
 }
 
-
-
-
-
 class DetailPage extends StatelessWidget {
   final User user;
+
   DetailPage(this.user);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.PeopNameInCountry),
+        title: Text(user.peopNameInCountry),
         backgroundColor: Colors.lightBlue,
         elevation: 0,
       ),
@@ -210,8 +203,7 @@ class DetailPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Image(
-                      image: NetworkImage(user.PhotoAddress,
-                          scale: 1.5),
+                      image: NetworkImage(user.photoAddress, scale: 1.5),
                     ),
                   ],
                 ),
@@ -219,11 +211,11 @@ class DetailPage extends StatelessWidget {
                   height: 3,
                 ),
                 Text(
-                  user.Ctry,
+                  user.ctry,
                   style: TextStyle(fontSize: 22.0, color: Colors.white),
                 ),
                 Text(
-                  user.PeopNameInCountry,
+                  user.peopNameInCountry,
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
                 )
               ],
@@ -238,7 +230,7 @@ class DetailPage extends StatelessWidget {
                     color: Colors.deepPurpleAccent,
                     child: ListTile(
                       title: Text(
-                        user.Population.toString(),
+                        user.population.toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.white,
@@ -258,7 +250,7 @@ class DetailPage extends StatelessWidget {
                     color: Colors.red,
                     child: ListTile(
                       title: Text(
-                        user.BibleStatus.toString(),
+                        user.bibleStatus.toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.white,
@@ -296,7 +288,7 @@ class DetailPage extends StatelessWidget {
               style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
             ),
             subtitle: Text(
-              user.Ctry,
+              user.ctry,
               style: TextStyle(fontSize: 15.0),
             ),
           ),
@@ -307,7 +299,7 @@ class DetailPage extends StatelessWidget {
               style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
             ),
             subtitle: Text(
-              user.PeopNameInCountry,
+              user.peopNameInCountry,
               style: TextStyle(fontSize: 15.0),
             ),
           ),
@@ -318,7 +310,7 @@ class DetailPage extends StatelessWidget {
               style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
             ),
             subtitle: Text(
-              user.RegionName,
+              user.regionName,
               style: TextStyle(fontSize: 15.0),
             ),
           ),
@@ -329,7 +321,7 @@ class DetailPage extends StatelessWidget {
               style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
             ),
             subtitle: Text(
-              user.AffinityBloc,
+              user.affinityBloc,
               style: TextStyle(fontSize: 15.0),
             ),
           ),
@@ -340,7 +332,7 @@ class DetailPage extends StatelessWidget {
               style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
             ),
             subtitle: Text(
-              user.PrimaryLanguageName.toString(),
+              user.primaryLanguageName.toString(),
               style: TextStyle(fontSize: 15.0),
             ),
           ),
@@ -351,7 +343,7 @@ class DetailPage extends StatelessWidget {
               style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
             ),
             subtitle: Text(
-              user.PrimaryReligion,
+              user.primaryReligion,
               style: TextStyle(fontSize: 15.0),
             ),
           ),
@@ -362,7 +354,7 @@ class DetailPage extends StatelessWidget {
               style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
             ),
             subtitle: Text(
-              user.LeastReached,
+              user.leastReached,
               style: TextStyle(fontSize: 14.0),
             ),
           ),
@@ -373,7 +365,7 @@ class DetailPage extends StatelessWidget {
               style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
             ),
             subtitle: Text(
-              user.Longitude.toString(),
+              user.longitude.toString(),
               style: TextStyle(fontSize: 14.0),
             ),
           ),
@@ -383,7 +375,7 @@ class DetailPage extends StatelessWidget {
               style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
             ),
             subtitle: Text(
-              user.Latitude.toString(),
+              user.latitude.toString(),
               style: TextStyle(fontSize: 14.0),
             ),
           ),
@@ -397,7 +389,7 @@ class DetailPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Image(
-              image: NetworkImage(user.MapAddress.toString()),
+              image: NetworkImage(user.mapAddress.toString()),
             ),
           )
         ],
@@ -406,64 +398,200 @@ class DetailPage extends StatelessWidget {
   }
 }
 
+// To parse this JSON data, do
+//
+//     final responseModel = responseModelFromJson(jsonString);
+
+import 'dart:convert';
+
+ResponseModel responseModelFromJson(String str) =>
+    ResponseModel.fromJson(json.decode(str));
+
+String responseModelToJson(ResponseModel data) =>     json.encode(data.toJson());
+
+class ResponseModel {
+  Meta meta;
+  List<User> data;
+  Status status;
+
+  ResponseModel({
+    this.meta,
+    this.data,
+    this.status,
+  });
+
+  factory ResponseModel.fromJson(Map<String, dynamic> json) =>     ResponseModel(
+    meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
+    data: json["data"] == null
+        ? null
+        : List<User>.from(json["data"].map((x) => User.fromJson(x))),
+    status: json["status"] == null ? null : Status.fromJson(json["status"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "meta": meta == null ? null : meta.toJson(),
+    "data": data == null
+        ? null
+        : List<dynamic>.from(data.map((x) => x.toJson())),
+    "status": status == null ? null : status.toJson(),
+  };
+}
+
 class User {
-  final String Ctry;
-  final String PeopNameInCountry;
-  final int Population;
-  final String LeastReached;
-  final String PrimaryLanguageName;
-  final int BibleStatus;
-  final String PrimaryReligion;
-  final String Continent;
-  final String RegionName;
-  final String AffinityBloc;
-  final double Longitude;
-  final double Latitude;
-  final String PeopleCluster;
-  final String Frontier;
-  final int WorkersNeeded;
-  final MapAddress;
-  final PhotoAddress;
+  String ctry;
+  String peopNameInCountry;
+  int population;
+  String leastReached;
+  String primaryLanguageName;
+  int bibleStatus;
+  String primaryReligion;
+  String continent;
+  String regionName;
+  String affinityBloc;
+  double longitude;
+  double latitude;
+  String peopleCluster;
+  String frontier;
+  int workersNeeded;
+  String photoAddress;
+  String mapAddress;
 
-  User(
-      {this.Ctry,
-        this.PeopNameInCountry,
-        this.Population,
-        this.PrimaryLanguageName,
-        this.BibleStatus,
-        this.PrimaryReligion,
-        this.Continent,
-        this.RegionName,
-        this.AffinityBloc,
-        this.Longitude,
-        this.Latitude,
-        this.LeastReached,
-        this.PeopleCluster,
-        this.Frontier,
-        this.WorkersNeeded,
-        this.MapAddress,
-        this.PhotoAddress});
+  User({
+    this.ctry,
+    this.peopNameInCountry,
+    this.population,
+    this.continent,
+    this.regionName,
+    this.affinityBloc,
+    this.peopleCluster,
+    this.leastReached,
+    this.frontier,
+    this.workersNeeded,
+    this.primaryLanguageName,
+    this.bibleStatus,
+    this.primaryReligion,
+    this.photoAddress,
+    this.mapAddress,
+    this.longitude,
+    this.latitude,
+  });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return new User(
-        Ctry: json['Ctry'],
-        PeopNameInCountry: json['PeopNameInCountry'],
-        Population: json['Population'],
-        PrimaryLanguageName: json['PrimaryLanguageName'],
-        BibleStatus: json['BibleStatus'],
-        PrimaryReligion: json['PrimaryReligion'],
-        Continent: json['Continent'],
-        RegionName: json['RegionName'],
-        AffinityBloc: json['AffinityBloc'],
-        Longitude: json['Longitude'],
-        Latitude: json['Latitude'],
-        LeastReached: json['LeastReached'],
-        PeopleCluster: json['PeopleCluster'],
-        Frontier: json['Frontier'],
-        WorkersNeeded: json['WorkersNeeded'],
-        MapAddress: json['MapAddress'],
-        PhotoAddress: json['PhotoAddress']);
-  }
+  factory User.fromJson(Map<String, dynamic> json) => User(
+    ctry: json["Ctry"] == null ? null : json["Ctry"],
+    peopNameInCountry: json["PeopNameInCountry"] == null
+        ? null
+        : json["PeopNameInCountry"],
+    population: json["Population"] == null ? null : json["Population"],
+    continent: json["Continent"] == null ? null : json["Continent"],
+    regionName: json["RegionName"] == null ? null : json["RegionName"],
+    affinityBloc:
+    json["AffinityBloc"] == null ? null : json["AffinityBloc"],
+    peopleCluster:
+    json["PeopleCluster"] == null ? null : json["PeopleCluster"],
+    leastReached:
+    json["LeastReached"] == null ? null : json["LeastReached"],
+    frontier: json["Frontier"] == null ? null : json["Frontier"],
+    workersNeeded:
+    json["WorkersNeeded"] == null ? null : json["WorkersNeeded"],
+    primaryLanguageName: json["PrimaryLanguageName"] == null
+        ? null
+        : json["PrimaryLanguageName"],
+    bibleStatus: json["BibleStatus"] == null ? null : json["BibleStatus"],
+    primaryReligion:
+    json["PrimaryReligion"] == null ? null : json["PrimaryReligion"],
+    photoAddress:
+    json["PhotoAddress"] == null ? null : json["PhotoAddress"],
+    mapAddress: json["MapAddress"] == null ? null : json["MapAddress"],
+    longitude:
+    json["Longitude"] == null ? null : json["Longitude"].toDouble(),
+    latitude: json["Latitude"] == null ? null : json["Latitude"].toDouble(),
+  );
 
+  Map<String, dynamic> toJson() => {
+    "Ctry": ctry == null ? null : ctry,
+    "PeopNameInCountry":
+    peopNameInCountry == null ? null : peopNameInCountry,
+    "Population": population == null ? null : population,
+    "Continent": continent == null ? null : continent,
+    "RegionName": regionName == null ? null : regionName,
+    "AffinityBloc": affinityBloc == null ? null : affinityBloc,
+    "PeopleCluster": peopleCluster == null ? null : peopleCluster,
+    "LeastReached": leastReached == null ? null : leastReached,
+    "Frontier": frontier == null ? null : frontier,
+    "WorkersNeeded": workersNeeded == null ? null : workersNeeded,
+    "PrimaryLanguageName":
+    primaryLanguageName == null ? null : primaryLanguageName,
+    "BibleStatus": bibleStatus == null ? null : bibleStatus,
+    "PrimaryReligion": primaryReligion == null ? null : primaryReligion,
+    "PhotoAddress": photoAddress == null ? null : photoAddress,
+    "MapAddress": mapAddress == null ? null : mapAddress,
+    "Longitude": longitude == null ? null : longitude,
+    "Latitude": latitude == null ? null : latitude,
+  };
+}
 
+class Meta {
+  Pagination pagination;
+
+  Meta({
+    this.pagination,
+  });
+
+  factory Meta.fromJson(Map<String, dynamic> json) => Meta(
+    pagination: json["pagination"] == null
+        ? null
+        : Pagination.fromJson(json["pagination"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "pagination": pagination == null ? null : pagination.toJson(),
+  };
+}
+
+class Pagination {
+  int totalCount;
+  int totalPages;
+  int currentPage;
+  int limit;
+
+  Pagination({
+    this.totalCount,
+    this.totalPages,
+    this.currentPage,
+    this.limit,
+  });
+
+  factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
+    totalCount: json["total_count"] == null ? null : json["total_count"],
+    totalPages: json["total_pages"] == null ? null : json["total_pages"],
+    currentPage: json["current_page"] == null ? null : json["current_page"],
+    limit: json["limit"] == null ? null : json["limit"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "total_count": totalCount == null ? null : totalCount,
+    "total_pages": totalPages == null ? null : totalPages,
+    "current_page": currentPage == null ? null : currentPage,
+    "limit": limit == null ? null : limit,
+  };
+}
+
+class Status {
+  String message;
+  int statusCode;
+
+  Status({
+    this.message,
+    this.statusCode,
+  });
+
+  factory Status.fromJson(Map<String, dynamic> json) => Status(
+    message: json["message"] == null ? null : json["message"],
+    statusCode: json["status_code"] == null ? null : json["status_code"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "message": message == null ? null : message,
+    "status_code": statusCode == null ? null : statusCode,
+  };
 }
