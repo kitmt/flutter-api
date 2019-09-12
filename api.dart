@@ -1,6 +1,5 @@
 mport 'dart:async';
 import 'dart:core';
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -21,7 +20,7 @@ class ApiScreenState extends State<Api> {
     });
     _list.clear();
     final response = await http.get(
-        "https://cmfiflutterapp.s3-ap-southeast-2.amazonaws.com/latest.json");
+        "https://joshuaproject.net/api/v2/people_groups?LeastReached=Y&limit=400&page=12&api_key=aWye9lV20QtF");
     if (response.statusCode == 200) {
       ResponseModel model = responseModelFromJson(response.body);
       setState(() {
@@ -154,7 +153,8 @@ class ApiScreenState extends State<Api> {
                             ),
                             Text(a.peopNameInCountry),
                           ],
-                        )),
+                        ),
+                    ),
                   );
                 },
               ),
@@ -402,7 +402,7 @@ class DetailPage extends StatelessWidget {
 //
 //     final responseModel = responseModelFromJson(jsonString);
 
-import 'dart:convert';
+//import 'dart:convert';
 
 ResponseModel responseModelFromJson(String str) =>
     ResponseModel.fromJson(json.decode(str));
